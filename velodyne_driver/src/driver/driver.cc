@@ -51,6 +51,8 @@ VelodyneDriver::VelodyneDriver(ros::NodeHandle node,
                                ros::NodeHandle private_nh)
 {
   // use private node handle to get parameters
+  std::string raw_topic;
+  private_nh.param("raw_topic", raw_topic, std::string("/raw"));
   private_nh.param("frame_id", config_.frame_id, std::string("velodyne"));
   std::string tf_prefix = tf::getPrefixParam(private_nh);
   ROS_DEBUG_STREAM("tf_prefix: " << tf_prefix);
@@ -152,7 +154,7 @@ VelodyneDriver::VelodyneDriver(ros::NodeHandle node,
   ROS_INFO("expected frequency: %.3f (Hz)", diag_freq);
 
   using namespace diagnostic_updater;
-  diag_topic_.reset(new TopicDiagnostic("velodyne_packets", diagnostics_,
+  diag_topic_.reset(new TopicDiagnostic(raw_topic, diagnostics_,
                                         FrequencyStatusParam(&diag_min_freq_,
                                                              &diag_max_freq_,
                                                              0.1, 10),
@@ -176,7 +178,7 @@ VelodyneDriver::VelodyneDriver(ros::NodeHandle node,
 
   // raw packet output topic
   output_ =
-    node.advertise<velodyne_msgs::VelodyneScan>("velodyne_packets", 10);
+    node.advertise<velodyne_msgs::VelodyneScan>(raw_topic, 10);
 
   last_azimuth_ = -1;
 }

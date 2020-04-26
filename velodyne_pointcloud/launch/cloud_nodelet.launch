@@ -3,16 +3,23 @@
 
 <launch>
   <arg name="calibration" default="" />
-  <arg name="manager" default="velodyne_nodelet_manager" />
+  <arg name="nodelet_manager_name" default="velodyne32_nodelet_manager" />
+  <arg name="node_name" default="pointcloud_nodelet"/>
   <arg name="max_range" default="130.0" />
   <arg name="min_range" default="0.9" />
   <arg name="organize_cloud" default="false" />
+  <arg name="publish_topic" default="/pointCloud"/>
+  <arg name="subscribe_topic" default="/raw"/>
+  <arg name="frame_id" default="velodyne" />
 
-  <node pkg="nodelet" type="nodelet" name="$(arg manager)_cloud"
-        args="load velodyne_pointcloud/CloudNodelet $(arg manager)">
+  <node pkg="nodelet" type="nodelet" name="$(arg node_name)"
+        args="load velodyne_pointcloud/CloudNodelet $(arg nodelet_manager_name)">
     <param name="calibration" value="$(arg calibration)"/>
+    <param name="frame_id" value="$(arg frame_id)"/>
     <param name="max_range" value="$(arg max_range)"/>
     <param name="min_range" value="$(arg min_range)"/>
     <param name="organize_cloud" value="$(arg organize_cloud)"/>
+    <param name="subscribe_topic" value="$(arg subscribe_topic)"/>
+    <param name="publish_topic" value="$(arg publish_topic)"/>
   </node>
 </launch>

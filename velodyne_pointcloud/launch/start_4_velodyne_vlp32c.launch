@@ -1,0 +1,164 @@
+<launch>
+    <arg name="calibration" default="$(find velodyne_pointcloud)/params/VeloView-VLP-32C.yaml"/>
+    <arg name="device_ip" default="" />
+    <arg name="left_front_velodyne32_frame_id" default="left_front_frame"/>
+    <arg name="right_front_velodyne32_frame_id" default="right_front_frame"/>
+    <arg name="left_rear_velodyne32_frame_id" default="left_rear_frame"/>
+    <arg name="right_rear_velodyne32_frame_id" default="right_rear_frame"/>
+    <arg name="organized" default="false"/>
+    <arg name="max_range_32" default="70.0" />
+    <arg name="model" default="VLP32C" />
+    <arg name="left_front_firing_data_port" default="2368"/>
+    <arg name="left_front_positioning_data_port" default="8308"/>
+    <arg name="left_front_raw_topic" default="/raw_packet/left_front"/>
+    <arg name="right_front_firing_data_port" default="2369"/>
+    <arg name="right_front_positioning_data_port" default="8309"/>
+    <arg name="right_front_raw_topic" default="/raw_packet/right_front"/>
+    <arg name="left_rear_firing_data_port" default="2370"/>
+    <arg name="left_rear_positioning_data_port" default="8310"/>
+    <arg name="left_rear_raw_topic" default="/raw_packet/left_rear"/>
+    <arg name="right_rear_firing_data_port" default="2371"/>
+    <arg name="right_rear_positioning_data_port" default="8311"/>
+    <arg name="right_rear_raw_topic" default="/raw_packet/right_rear"/>
+    <arg name="left_front_topic" default="/left_front_pointcloud"/>
+    <arg name="right_front_topic" default="/right_front_pointcloud"/>
+    <arg name="right_rear_topic" default="/right_rear_pointcloud"/>
+    <arg name="left_rear_topic" default="/left_rear_pointcloud"/>
+    <arg name="frame_id" default="velodyne" />
+    <arg name="manager" default="$(arg frame_id)_nodelet_manager" />
+    <arg name="max_range" default="130.0" />
+    <arg name="min_range" default="0.4" />
+    <arg name="pcap" default="" />
+    <arg name="read_fast" default="false" />
+    <arg name="read_once" default="false" />
+    <arg name="repeat_delay" default="0.0" />
+    <arg name="rpm" default="600.0" />
+    <arg name="gps_time" default="false" />
+    <arg name="laserscan_ring" default="-1" />
+    <arg name="laserscan_resolution" default="0.007" />
+    <arg name="organize_cloud" default="false" />
+    <arg name="nodelet_manager_name" value="velodyne32_nodelet_manager" />
+    
+  <include file="$(find velodyne_pointcloud)/launch/nodelet_manager.launch">
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)"/>
+  </include>
+    <!--  VLP32C -->
+    <!-- left front -->
+  <include file="$(find velodyne_driver)/launch/driver_nodelet.launch">
+    <arg name="device_ip" value="$(arg device_ip)"/>
+    <arg name="frame_id" value="$(arg left_front_velodyne32_frame_id)"/>
+    <arg name="node_name" default="driver_nodelet_left_front"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)" />
+    <arg name="model" value="32C"/>
+    <arg name="pcap" value="$(arg pcap)"/>
+    <arg name="port" value="$(arg left_front_firing_data_port)"/>
+    <arg name="read_fast" value="$(arg read_fast)"/>
+    <arg name="read_once" value="$(arg read_once)"/>
+    <arg name="repeat_delay" value="$(arg repeat_delay)"/>
+    <arg name="rpm" value="$(arg rpm)"/>
+    <arg name="gps_time" value="$(arg gps_time)"/>
+    <arg name="raw_topic" value="$(arg left_front_raw_topic)"/>
+    </include>
+  <!-- right front -->
+  <include file="$(find velodyne_driver)/launch/driver_nodelet.launch">
+    <arg name="device_ip" value="$(arg device_ip)"/>
+    <arg name="frame_id" value="$(arg right_front_velodyne32_frame_id)"/>
+    <arg name="node_name" default="driver_nodelet_right_front"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)" />
+    <arg name="model" value="32C"/>
+    <arg name="pcap" value="$(arg pcap)"/>
+    <arg name="port" value="$(arg right_front_firing_data_port)"/>
+    <arg name="read_fast" value="$(arg read_fast)"/>
+    <arg name="read_once" value="$(arg read_once)"/>
+    <arg name="repeat_delay" value="$(arg repeat_delay)"/>
+    <arg name="rpm" value="$(arg rpm)"/>
+    <arg name="gps_time" value="$(arg gps_time)"/>
+    <arg name="raw_topic" value="$(arg right_front_raw_topic)"/>
+    </include>
+
+  <!-- right rear -->
+  <include file="$(find velodyne_driver)/launch/driver_nodelet.launch">
+    <arg name="device_ip" value="$(arg device_ip)"/>
+    <arg name="frame_id" value="$(arg right_rear_velodyne32_frame_id)"/>
+    <arg name="node_name" default="driver_nodelet_right_rear"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)" />
+    <arg name="model" value="32C"/>
+    <arg name="pcap" value="$(arg pcap)"/>
+    <arg name="port" value="$(arg right_rear_firing_data_port)"/>
+    <arg name="read_fast" value="$(arg read_fast)"/>
+    <arg name="read_once" value="$(arg read_once)"/>
+    <arg name="repeat_delay" value="$(arg repeat_delay)"/>
+    <arg name="rpm" value="$(arg rpm)"/>
+    <arg name="gps_time" value="$(arg gps_time)"/>
+    <arg name="raw_topic" value="$(arg right_rear_raw_topic)"/>
+    </include>
+
+  <!-- left rear -->
+  <include file="$(find velodyne_driver)/launch/driver_nodelet.launch">
+    <arg name="device_ip" value="$(arg device_ip)"/>
+    <arg name="frame_id" value="$(arg left_rear_velodyne32_frame_id)"/>
+    <arg name="node_name" default="driver_nodelet_left_rear"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)" />
+    <arg name="model" value="32C"/>
+    <arg name="pcap" value="$(arg pcap)"/>
+    <arg name="port" value="$(arg left_rear_firing_data_port)"/>
+    <arg name="read_fast" value="$(arg read_fast)"/>
+    <arg name="read_once" value="$(arg read_once)"/>
+    <arg name="repeat_delay" value="$(arg repeat_delay)"/>
+    <arg name="rpm" value="$(arg rpm)"/>
+    <arg name="gps_time" value="$(arg gps_time)"/>
+    <arg name="raw_topic" value="$(arg left_rear_raw_topic)"/>
+  </include>
+  <!-- start cloud nodelet -->
+  <!-- left front point cloud -->
+  <include file="$(find velodyne_pointcloud)/launch/cloud_nodelet.launch">
+    <arg name="calibration" value="$(arg calibration)"/>
+    <arg name="frame_id" value="$(arg left_front_velodyne32_frame_id)"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)" />
+    <arg name="node_name" default="pointcloud_nodelet_left_front"/>
+    <arg name="max_range" value="$(arg max_range)"/>
+    <arg name="min_range" value="$(arg min_range)"/>
+    <arg name="organize_cloud" value="$(arg organize_cloud)"/>
+    <arg name="subscribe_topic" value="$(arg left_front_raw_topic)"/>
+    <arg name="publish_topic" value="$(arg left_front_topic)"/>
+    </include>
+
+  <!-- right front point cloud -->
+  <include file="$(find velodyne_pointcloud)/launch/cloud_nodelet.launch">
+    <arg name="calibration" value="$(arg calibration)"/>
+    <arg name="frame_id" value="$(arg right_front_velodyne32_frame_id)"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)" />
+    <arg name="node_name" default="pointcloud_nodelet_right_front"/>
+    <arg name="max_range" value="$(arg max_range)"/>
+    <arg name="min_range" value="$(arg min_range)"/>
+    <arg name="organize_cloud" value="$(arg organize_cloud)"/>
+    <arg name="subscribe_topic" value="$(arg right_front_raw_topic)"/>
+    <arg name="publish_topic" value="$(arg right_front_topic)"/>
+    </include>
+
+  <!-- right rear point cloud -->
+  <include file="$(find velodyne_pointcloud)/launch/cloud_nodelet.launch">
+    <arg name="calibration" value="$(arg calibration)"/>
+    <arg name="frame_id" value="$(arg right_rear_velodyne32_frame_id)"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)" />
+    <arg name="node_name" default="pointcloud_nodelet_right_rear"/>
+    <arg name="max_range" value="$(arg max_range)"/>
+    <arg name="min_range" value="$(arg min_range)"/>
+    <arg name="organize_cloud" value="$(arg organize_cloud)"/>
+    <arg name="subscribe_topic" value="$(arg right_rear_raw_topic)"/>
+    <arg name="publish_topic" value="$(arg right_rear_topic)"/>
+    </include>
+
+  <!-- left rear point cloud -->
+  <include file="$(find velodyne_pointcloud)/launch/cloud_nodelet.launch">
+    <arg name="calibration" value="$(arg calibration)"/>
+    <arg name="frame_id" value="$(arg left_rear_velodyne32_frame_id)"/>
+    <arg name="nodelet_manager_name" value="$(arg nodelet_manager_name)" />
+    <arg name="node_name" default="pointcloud_nodelet_left_rear"/>
+    <arg name="max_range" value="$(arg max_range)"/>
+    <arg name="min_range" value="$(arg min_range)"/>
+    <arg name="organize_cloud" value="$(arg organize_cloud)"/>
+    <arg name="subscribe_topic" value="$(arg left_rear_raw_topic)"/>
+    <arg name="publish_topic" value="$(arg left_rear_topic)"/>
+  </include>
+</launch>

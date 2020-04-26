@@ -83,6 +83,8 @@ class Convert
       double min_range;              ///< minimum range to publish
       uint16_t num_lasers;           ///< number of lasers
       int npackets;                  ///< number of packets to combine
+      std::string subscribe_topic;   ///< subscribe topic name 
+      std::string publish_topic;     ///< publish topic as convert result
     }
     Config;
     Config config_;

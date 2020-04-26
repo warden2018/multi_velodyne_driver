@@ -24,7 +24,10 @@ namespace velodyne_pointcloud
   Convert::Convert(ros::NodeHandle node, ros::NodeHandle private_nh):
     data_(new velodyne_rawdata::RawData()), first_rcfg_call(true)
   {
-
+    ROS_INFO("Convert construtor called.");
+    private_nh.param("subscribe_topic", config_.subscribe_topic, std::string("raw"));
+    private_nh.param("publish_topic", config_.publish_topic, std::string("/pointcloud"));
+    private_nh.param("frame_id", config_.target_frame, std::string("velodyne"));
     boost::optional<velodyne_pointcloud::Calibration> calibration = data_->setup(private_nh);
     if(calibration)
     {
@@ -36,8 +39,8 @@ namespace velodyne_pointcloud
         ROS_ERROR_STREAM("Could not load calibration file!");
     }
 
-    config_.target_frame = config_.fixed_frame = "velodyne";
-
+    
+    config_.fixed_frame = config_.target_frame;
     if(config_.organize_cloud)
     {
       container_ptr_ = boost::shared_ptr<OrganizedCloudXYZIR>(
@@ -56,7 +59,7 @@ namespace velodyne_pointcloud
 
     // advertise output point cloud (before subscribing to input data)
     output_ =
-      node.advertise<sensor_msgs::PointCloud2>("velodyne_points", 10);
+      node.advertise<sensor_msgs::PointCloud2>(config_.publish_topic, 10);
 
     srv_ = boost::make_shared <dynamic_reconfigure::Server<velodyne_pointcloud::
       CloudNodeConfig> > (private_nh);
@@ -67,7 +70,7 @@ namespace velodyne_pointcloud
 
     // subscribe to VelodyneScan packets
     velodyne_scan_ =
-      node.subscribe("velodyne_packets", 10,
+      node.subscribe(config_.subscribe_topic, 10,
                      &Convert::processScan, (Convert *) this,
                      ros::TransportHints().tcpNoDelay(true));
 
@@ -89,6 +92,7 @@ namespace velodyne_pointcloud
                 uint32_t level)
   {
     ROS_INFO("Reconfigure Request");
+    config_.fixed_frame = config_.target_frame;
     data_->setParameters(config.min_range, config.max_range, config.view_direction,
                          config.view_width);
     config_.min_range = config.min_range;
